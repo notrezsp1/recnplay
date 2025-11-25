@@ -4,28 +4,25 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "teleop")
 public class teleop extends OpMode {
-    public DcMotor br, bl, claw;
-    public Arm arm;
+    public DcMotor br, bl, shooter;
+    public Servo servo;
 
     @Override
     public void init() {
         br = hardwareMap.get(DcMotor.class, "br");
         bl = hardwareMap.get(DcMotor.class, "bl");
-        claw = hardwareMap.get(DcMotor.class, "claw");
+        shooter = hardwareMap.get(DcMotor.class, "claw");
+        servo = hardwareMap.get(Servo.class, "servo");
 
-        claw.setDirection(DcMotorSimple.Direction.REVERSE);
-        arm = new Arm(hardwareMap, telemetry);
-        arm.init();
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    @Override
-    public void start() {
-        arm.start();
-    }
+
 
     @Override
     public void loop() {
@@ -39,28 +36,20 @@ public class teleop extends OpMode {
         br.setPower(rightPower);
 
 
-
-
-
-        if (gamepad1.dpad_down) {
-            arm.toLow();
-        } else if (gamepad1.dpad_up) {
-            arm.toHigh();
-        } else if (gamepad1.dpad_left) {
-            arm.toMid();
-        } else if (gamepad1.dpad_right) {
-            arm.toZero();
-        }
-
-
         if (gamepad1.right_trigger > 0.1) {
-            claw.setPower(1.0);
+            shooter.setPower(1);
         } else if (gamepad1.left_trigger > 0.1) {
-            claw.setPower(-1.0);
-        } else {
-            claw.setPower(0);
+            shooter.setPower(-1);
+        } else{
+            shooter.setPower(0);
         }
-        arm.periodic();
+
+
+        if (gamepad1.right_bumper){
+            servo.setPosition(1);
+        }else {
+            servo.setPosition(0);
+        }
 
 
     }

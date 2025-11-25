@@ -30,14 +30,4 @@ public class Arm {
 
     }
 
-    public void update() {
-       arm.Mode
-
-
-
-    public void periodic() {
-        update();
-
-        }
-    }
 }
